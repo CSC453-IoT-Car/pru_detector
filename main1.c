@@ -67,6 +67,91 @@ volatile register uint32_t __R31;
 
 uint8_t payload[RPMSG_BUF_SIZE];
 
+//units are us
+//HIGH is 1620
+#define MIN_HIGH  1200
+#define MAX_HIGH 2000
+//LOW is 460
+#define MIN_LOW  100
+#define MAX_LOW 800
+//START is 4500
+#define MAX_START 5000
+#define MIN_START 3500
+// the maximum pulse we'll listen for 
+#define MAXPULSE 10000
+//Pins 8.39,41,43,45
+const unsigned pinMasks[] = {1 << 6, 1 << 4, 1 << 2, 1 << 0};
+#define SENSORS (1)
+#define RESOLUTION 10
+
+unsigned codes[SENSORS];
+unsigned highTime[SENSORS];
+unsigned lowTime[SENSORS];
+unsigned pulseCount[SENSORS];
+unsigned high;
+unsigned active;
+
+
+void pollReceivers(){
+	unsigned i;
+	unsigned mask;
+    for(i = 0; i < SENSORS ; i++){
+        mask = pinMasks[i];
+        if(__R31 & mask){
+            if(! (high & mask)){ //first high
+                high |= mask;               
+                highTime[i] = 0;
+                //any logic on lowtime
+            } else{  //all other high polls
+                highTime[i] += RESOLUTION; 
+                if(highTime[i] > MAXPULSE){
+                    if(active & mask){
+                       active &= ~mask;
+                        //verify
+                        //print - warning the timing of this will effect concurrent reads! 
+                    }
+                }
+            }
+             
+        } else {
+            if(high & mask){//first low
+                high &= ~mask;
+                lowTime[i] = 0;
+                  if(! (active & mask)){ //in range, not currently active
+                    //check if in range for start signal -> active = true
+                    if(highTime[i] >= MIN_START && highTime[i] <= MAX_START){
+                        active |= mask;               
+                    }
+                } else{ //in range and actively listening
+                    //if in range for high, shift in 1 to code
+                    if(highTime[i] >= MIN_HIGH && highTime[i] <= MAX_HIGH){
+                        codes[i] = (codes[i] << 1) + 1;
+                    }
+                    //if in range for low, shift in 0 to code
+                    if(highTime[i] >= MIN_LOW && highTime[i] <= MAX_LOW){
+                        codes[i] <<= 1;
+                    }
+                    //else, discard code as bad data
+                  
+                }           
+            }//end first low
+            else{//not first low
+                lowTime[i]+=RESOLUTION;
+             //   Serial.println(lowTime[pin]);
+                 //if low for too long, end of code. verify code is valid and then print
+                if((lowTime[i] > MAXPULSE || pulseCount[i] >= 16) && (active & mask)){
+                    active &= ~mask;
+                    //verify
+                    //print - warning the timing of this will effect concurrent reads! 
+                }  
+            }
+           
+        }      
+    }
+}
+
+
+
 /*
  * main.c
  */
@@ -86,21 +171,85 @@ void main(void)
 	status = &resourceTable.rpmsg_vdev.status;
 	while (!(*status & VIRTIO_CONFIG_S_DRIVER_OK));
 
-	/* Initialize the RPMsg transport structure */
+	// /* Initialize the RPMsg transport structure */
 	pru_rpmsg_init(&transport, &resourceTable.rpmsg_vring0, &resourceTable.rpmsg_vring1, TO_ARM_HOST, FROM_ARM_HOST);
 
-	/* Create the RPMsg channel between the PRU and ARM user space using the transport structure. */
+	// /* Create the RPMsg channel between the PRU and ARM user space using the transport structure. */
 	while (pru_rpmsg_channel(RPMSG_NS_CREATE, &transport, CHAN_NAME, CHAN_DESC, CHAN_PORT) != PRU_RPMSG_SUCCESS);
+	
+	// //wait for start signal from ARM
+	  while(!(__R31 & HOST_INT));	
+	// /* Clear the event status */
+	 CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
+	while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) != PRU_RPMSG_SUCCESS) {
+		//wait for start signal reception to work
+	}
+
+	
+	unsigned long time = 0;
+	unsigned long count = 0;
+	unsigned bit;
+	unsigned i;
 	while (1) {
-		/* Check bit 31 of register R31 to see if the ARM has kicked us */
-		if (__R31 & HOST_INT) {
-			/* Clear the event status */
-			CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
-			/* Receive all available messages, multiple messages can be sent per kick */
-			while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPMSG_SUCCESS) {
-				/* Echo the message back to the same address from which we just received */
-				pru_rpmsg_send(&transport, dst, src, payload, len);
+		time  = count;
+		// payload[0] = __R31 & pinMasks[0] ? 'H' : 'L';
+		// payload[1] = '\n';
+		// payload[2] = 0;
+		// len = 3;
+		
+		//time = 0;
+		// while(__R31 & pinMasks[0]){
+		// 	time++;
+		// 	__delay_cycles(200000); // number of ms
+		// }
+		// // if(time > 0){
+		// // 	for(unsigned i = 0; i < 510 && time > 0; i++){
+		// // 	//	payload[i] = digits[time ]
+		// // 	}
+		// // }
+		// if(time > 0){
+		if(time > 0){
+			payload[0] = '1';
+			payload[1] = ':';
+			for(bit = 1 << 15, i = 2; i < 18; i++ ){ //2 to 18 = 16 bits
+				payload[i] = (time & bit) ? '1' : '0';
+				bit >>= 1;
 			}
+			payload[18] = '\n';
+			payload[19] = 0;
+			len = 20;
+			
+			pru_rpmsg_send(&transport, dst, src, payload, len);
+			
+			// payload[0] =(uint8_t) (time / 1000) + '0';
+			// time %= 1000;
+			// payload[1] = (uint8_t)(time / 100) + '0';
+			// time %= 100;
+			// payload[2] = (uint8_t)(time / 10) + '0';	
+			// time %= 10;
+			// payload[3] = (uint8_t) (time)  + '0';
+			// payload[4] = '\n';
+			// payload[5] = 0;
+			//len = 6;
+			// pru_rpmsg_send(&transport, dst, src, payload, len);
 		}
+		
+		// }
+		// /*
+		// payload[0] = 'H';
+		// payload[1] = 'I';
+		// payload[2] = '\n';
+		// payload[3] = 0;
+		// len = 4;
+		
+		
+	
+		
+		
+		// */
+	//	__delay_cycles(200000000);
+	
+		__delay_cycles(2000000);
+		count++;
 	}
 }
