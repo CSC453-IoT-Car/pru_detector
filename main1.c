@@ -37,31 +37,27 @@
 #include <pru_intc.h>
 #include <rsc_types.h>
 #include <pru_rpmsg.h>
-#include "resource_table_0.h"
-
-#define PRU0_GPIO (1<<2)
+#include "resource_table_1.h"
 
 volatile register uint32_t __R31;
 
-volatile register unsigned int __R30;
-
-/* Host-0 Interrupt sets bit 30 in register R31 */
-#define HOST_INT			((uint32_t) 1 << 30)
+/* Host-1 Interrupt sets bit 31 in register R31 */
+#define HOST_INT			((uint32_t) 1 << 31)
 
 /* The PRU-ICSS system events used for RPMsg are defined in the Linux device tree
  * PRU0 uses system event 16 (To ARM) and 17 (From ARM)
  * PRU1 uses system event 18 (To ARM) and 19 (From ARM)
  */
-#define TO_ARM_HOST			16
-#define FROM_ARM_HOST			17
+#define TO_ARM_HOST			18
+#define FROM_ARM_HOST			19
 
 /*
  * Using the name 'rpmsg-pru' will probe the rpmsg_pru driver found
  * at linux-x.y.z/drivers/rpmsg/rpmsg_pru.c
  */
 #define CHAN_NAME			"rpmsg-pru"
-#define CHAN_DESC			"Channel 30"
-#define CHAN_PORT			30
+#define CHAN_DESC			"Channel 31"
+#define CHAN_PORT			31
 
 /*
  * Used to make sure the Linux drivers are ready for RPMsg communication
@@ -69,20 +65,7 @@ volatile register unsigned int __R30;
  */
 #define VIRTIO_CONFIG_S_DRIVER_OK	4
 
-#define SENSORS 1
-
-//const unsigned[] pinMasks = [];
-
 uint8_t payload[RPMSG_BUF_SIZE];
-
-/*
-void pollReceivers(){
-	for(unsigned i = 0; i < SENSORS; i++){
-		
-	}
-	
-}*/
-
 
 /*
  * main.c
@@ -108,66 +91,16 @@ void main(void)
 
 	/* Create the RPMsg channel between the PRU and ARM user space using the transport structure. */
 	while (pru_rpmsg_channel(RPMSG_NS_CREATE, &transport, CHAN_NAME, CHAN_DESC, CHAN_PORT) != PRU_RPMSG_SUCCESS);
-	
-	__R30 &= ~PRU0_GPIO;
-	
-	//Wait for message
-	while (!(__R31 & HOST_INT));
-	/*Clear the event status */
-	CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
-	//receive the start message
-	while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) != PRU_RPMSG_SUCCESS);
-	
-	payload[0] = 'H';
-	payload[1] = 'I';
-	payload[2] = '\n';
-	payload[3] = 0;
-	len = 4;
-	
 	while (1) {
-		/* Check bit 30 of register R31 to see if the ARM has kicked us */
-		
-		
-	//	pollReceivers();
-		
-		//check for printout flags, if so print out respective sensor data
-		
-		//TODO determine loop timing
-	//	__delay_cycles(2000); //10us
-		
-		
-		
-		
-		//if (__R31 & HOST_INT) {
+		/* Check bit 31 of register R31 to see if the ARM has kicked us */
+		if (__R31 & HOST_INT) {
 			/* Clear the event status */
-		//	CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
+			CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
 			/* Receive all available messages, multiple messages can be sent per kick */
-		//	while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPMSG_SUCCESS) {
+			while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPMSG_SUCCESS) {
 				/* Echo the message back to the same address from which we just received */
-	//			payload[0] = 'H';
-	
-	// __R30 |= PRU0_GPIO;
-		payload[0] = 'H';
-	payload[1] = 'I';
-	payload[2] = '\n';
-	payload[3] = 0;
-	len = 4;
 				pru_rpmsg_send(&transport, dst, src, payload, len);
-			//	__delay_cycles(10);
-		//__R30 &= ~PRU0_GPIO;
-			payload[0] = 'I';
-	payload[1] = 'M';
-	payload[2] = '1';
-	payload[3] = '\n';
-	payload[4] = 0;
-	len = 5;
-	
-				pru_rpmsg_send(&transport, dst, src, payload, len);
-				// __R30 &= ~PRU0_GPIO;
-				__delay_cycles(200000000);
-		//	}
-		//}
-		
-		
+			}
+		}
 	}
 }
