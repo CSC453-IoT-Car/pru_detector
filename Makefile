@@ -2,7 +2,7 @@
 # Copyright (c) 2016 Zubeen Tolani <ZeekHuge - zeekhuge@gmail.com>
 # Copyright (c) 2017 Texas Instruments - Jason Kridner <jdk@ti.com>
 #
-PROJ_NAME=detector
+PROJ_NAME=main
 
 # PRU_CGT environment variable must point to the TI PRU compiler directory.
 # PRU_SUPPORT points to pru-software-support-package
@@ -21,13 +21,13 @@ LFLAGS=--reread_libs --warn_sections --stack_size=$(STACK_SIZE) --heap_size=$(HE
 
 GEN_DIR=gen
 
-PRU0_FW		=$(GEN_DIR)/$(PROJ_NAME).out
+PRU1_FW		=$(GEN_DIR)/$(PROJ_NAME).out
 
 # -----------------------------------------------------
 # Variable to edit in the makefile
 
 # add the required firmwares to TARGETS
-TARGETS		=$(PRU0_FW) $(GEN_DIR)/decay95.out
+TARGETS		=$(PRU1_FW) $(GEN_DIR)/decay95.out
 
 #------------------------------------------------------
 
@@ -44,7 +44,7 @@ $(GEN_DIR)/decay95.obj: $(PROJ_NAME).c
 	@echo 'CC	$<'
 	@clpru --define=DECAY_RATE=95 --include_path=$(PRU_CGT)/include $(INCLUDE) $(CFLAGS) -fe $@ $<
 
-$(PRU0_FW): $(GEN_DIR)/$(PROJ_NAME).obj
+$(PRU1_FW): $(GEN_DIR)/$(PROJ_NAME).obj
 	@echo 'LD	$^' 
 	@lnkpru -i$(PRU_CGT)/lib -i$(PRU_CGT)/include $(LFLAGS) -o $@ $^  $(LINKER_COMMAND_FILE) --library=libc.a $(LIBS) $^
 
@@ -56,22 +56,22 @@ $(GEN_DIR)/$(PROJ_NAME).obj: $(PROJ_NAME).c
 .PHONY: install run run95
 
 install:
-	@echo '-	copying firmware file $(PRU0_FW) to /lib/firmware/am335x-pru0-fw'
-	@cp $(PRU0_FW) /lib/firmware/am335x-pru0-fw
+	@echo '-	copying firmware file $(PRU1_FW) to /lib/firmware/am335x-pru1-fw'
+	@cp $(PRU1_FW) /lib/firmware/am335x-pru1-fw
 
 run: install
-	@echo '-	rebooting pru core 0'
-	$(shell echo "4a334000.pru0" > /sys/bus/platform/drivers/pru-rproc/unbind 2> /dev/null)
-	$(shell echo "4a334000.pru0" > /sys/bus/platform/drivers/pru-rproc/bind)
-	@echo "-	pru core 0 is now loaded with $(PRU0_FW)"
+	@echo '-	rebooting pru core 1'
+	$(shell echo "4a338000.pru1" > /sys/bus/platform/drivers/pru-rproc/unbind 2> /dev/null)
+	$(shell echo "4a338000.pru1" > /sys/bus/platform/drivers/pru-rproc/bind)
+	@echo "-	pru core 1 is now loaded with $(PRU1_FW)"
 
 run95:
-	@echo '-	copying firmware file $(GEN_DIR)/decay95.out to /lib/firmware/am335x-pru0-fw'
-	@cp $(GEN_DIR)/decay95.out /lib/firmware/am335x-pru0-fw
-	@echo '-	rebooting pru core 0'
-	$(shell echo "4a334000.pru0" > /sys/bus/platform/drivers/pru-rproc/unbind 2> /dev/null)
-	$(shell echo "4a334000.pru0" > /sys/bus/platform/drivers/pru-rproc/bind)
-	@echo "-	pru core 0 is now loaded with $(GEN_DIR)/decay95.out"
+	@echo '-	copying firmware file $(GEN_DIR)/decay95.out to /lib/firmware/am335x-pru1-fw'
+	@cp $(GEN_DIR)/decay95.out /lib/firmware/am335x-pru1-fw
+	@echo '-	rebooting pru core 1'
+	$(shell echo "4a338000.pru1" > /sys/bus/platform/drivers/pru-rproc/unbind 2> /dev/null)
+	$(shell echo "4a338000.pru1" > /sys/bus/platform/drivers/pru-rproc/bind)
+	@echo "-	pru core 1 is now loaded with $(GEN_DIR)/decay95.out"
 
 .PHONY: clean
 clean:
