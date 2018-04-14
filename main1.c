@@ -183,23 +183,25 @@ void main(void)
 	status = &resourceTable.rpmsg_vdev.status;
 	while (!(*status & VIRTIO_CONFIG_S_DRIVER_OK));
 
-	// /* Initialize the RPMsg transport structure */
+	/* Initialize the RPMsg transport structure */
 	pru_rpmsg_init(&transport, &resourceTable.rpmsg_vring0, &resourceTable.rpmsg_vring1, TO_ARM_HOST, FROM_ARM_HOST);
 
-	// /* Create the RPMsg channel between the PRU and ARM user space using the transport structure. */
+	/* Create the RPMsg channel between the PRU and ARM user space using the transport structure. */
 	while (pru_rpmsg_channel(RPMSG_NS_CREATE, &transport, CHAN_NAME, CHAN_DESC, CHAN_PORT) != PRU_RPMSG_SUCCESS);
 	
-	// //wait for start signal from ARM
-	  while(!(__R31 & HOST_INT));	
-	// /* Clear the event status */
-	 CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
+	//wait for start signal from ARM
+	waitForMessage:
+	while(!(__R31 & HOST_INT));	
+	/* Clear the event status */
+	CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
 	while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) != PRU_RPMSG_SUCCESS) {
 		//wait for start signal reception to work
 	}
 	
-	
-
-	
+	if(len < 2 || payload[0] != 'g' || payload[1] != 'o'){
+		//did not get the start message
+		goto waitForMessage;
+	} 
 	
     
 	unsigned long time = 0;
@@ -219,31 +221,9 @@ void main(void)
 	printFlag = 0;
 	unsigned noPrint = 0;
 	
-	// while(1){
-	// 	time = 0;
-	// 	while(__R31 & pinMasks[0]){
-	// 		time++;
-	// 		__delay_cycles(200000); // number of ms
-	// 	}
-	// 	if(time > 0){
-	// 		payload[0] = '0' + i;
-	// 		payload[1] = ':';
-	// 		for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
-	// 			payload[x] = (time & bit) ? '1' : '0';
-	// 			bit >>= 1;
-	// 		}
-	// 		payload[18] = '\n';
-	// 		payload[19] = 0;
-	// 		len = 20;
-			
-	// 		pru_rpmsg_send(&transport, dst, src, payload, len);
-	// 	}
-	// }
-	
 	
 	while (1) {
 		resetIEP();
-		 //__delay_cycles(2000000);
 		pollReceivers();
 		
 		//verify and Print if we need to 
@@ -272,69 +252,21 @@ void main(void)
         	}
         	//clear print flags
 			printFlag = 0;
-        } else{
-        	noPrint += RESOLUTION;
-        	if(noPrint > 10000000){
-        		payload[0] = 'n' ;
-				payload[1] = 'o';
-				payload[2] = '\n';
-				payload[3] = 0;
-				len = 4;
-				pru_rpmsg_send(&transport, dst, src, payload, len);
-        		noPrint = 0;
-        	}
-        	
         }
+    //     else{  //print "no" if seen nothing in 10 seconds to confirm stil running
+    //     	noPrint += RESOLUTION;
+    //     	if(noPrint > 10000000){
+    //     		payload[0] = 'n' ;
+				// payload[1] = 'o';
+				// payload[2] = '\n';
+				// payload[3] = 0;
+				// len = 4;
+				// pru_rpmsg_send(&transport, dst, src, payload, len);
+    //     		noPrint = 0;
+    //     	}
+        	
+    //     }
 		while( CT_IEP.TMR_CNT < SAMPLE_PERIOD);
-		time = CT_IEP.TMR_CNT;
-		// payload[0] = '0' + i;
-		// payload[1] = ':';
-		// for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
-		// 	payload[x] = (time & bit) ? '1' : '0';
-		// 	bit >>= 1;
-		// }
-		// payload[18] = '\n';
-		// payload[19] = 0;
-		// len = 20;
-		
-		// pru_rpmsg_send(&transport, dst, src, payload, len);
-		// payload[0] = __R31 & pinMasks[0] ? 'H' : 'L';
-		// payload[1] = '\n';
-		// payload[2] = 0;
-		// len = 3;
-		
-		//time = 0;
-		// while(__R31 & pinMasks[0]){
-		// 	time++;
-		// 	__delay_cycles(200000); // number of ms
-		// }
-		// // if(time > 0){
-		// // 	for(unsigned i = 0; i < 510 && time > 0; i++){
-		// // 	//	payload[i] = digits[time ]
-		// // 	}
-		// // }
-		// if(time > 0){
-		
-		
-		//LAST WORKING CLOCK PRINT
-		// if(time > 0){
-		// 	payload[0] = '1';
-		// 	payload[1] = ':';
-		// 	for(bit = 1 << 15, i = 2; i < 18; i++ ){ //2 to 18 = 16 bits
-		// 		payload[i] = (time & bit) ? '1' : '0';
-		// 		bit >>= 1;
-		// 	}
-		// 	payload[18] = '\n';
-		// 	payload[19] = 0;
-		// 	len = 20;
-			
-		// 	pru_rpmsg_send(&transport, dst, src, payload, len);
-			
-		// }
-		
 	
-	
-		//  __delay_cycles(2000000);
-		//count++;
 	}
 }
