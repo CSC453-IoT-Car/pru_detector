@@ -266,6 +266,23 @@ void main(void)
     //     	}
         	
     //     }
+    
+    //Check for message
+    	if(__R31 & HOST_INT){
+    		/* Clear the event status */
+			CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
+			if (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPMSG_SUCCESS) {
+				if(len >= 4 && payload[0] == 's' && payload[1] == 't' && payload[2] == 'o' && payload[3] == 'p'){
+					//got stop command
+					goto waitForMessage;
+				}
+			} else{
+			  CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;
+			}
+			
+		}
+    
+    	
 		while( CT_IEP.TMR_CNT < SAMPLE_PERIOD);
 	
 	}
