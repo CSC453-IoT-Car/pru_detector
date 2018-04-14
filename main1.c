@@ -37,6 +37,7 @@
 #include <pru_intc.h>
 #include <rsc_types.h>
 #include <pru_rpmsg.h>
+#include <pru_iep.h>
 #include "resource_table_1.h"
 
 volatile register uint32_t __R31;
@@ -81,8 +82,9 @@ uint8_t payload[RPMSG_BUF_SIZE];
 #define MAXPULSE 10000
 //Pins 8.39,41,43,45
 const unsigned pinMasks[] = {1 << 6, 1 << 4, 1 << 2, 1 << 0};
-#define SENSORS (1)
+#define SENSORS (4)
 #define RESOLUTION 10
+#define SAMPLE_PERIOD 2000     //10us / 5ns = 2000cycles
 
 unsigned codes[SENSORS];
 unsigned highTime[SENSORS];
@@ -90,6 +92,7 @@ unsigned lowTime[SENSORS];
 unsigned pulseCount[SENSORS];
 unsigned high;
 unsigned active;
+unsigned printFlag;
 
 
 void pollReceivers(){
@@ -97,7 +100,7 @@ void pollReceivers(){
 	unsigned mask;
     for(i = 0; i < SENSORS ; i++){
         mask = pinMasks[i];
-        if(__R31 & mask){
+        if(!(__R31 & mask)){ //inverted by transistor
             if(! (high & mask)){ //first high
                 high |= mask;               
                 highTime[i] = 0;
@@ -109,6 +112,8 @@ void pollReceivers(){
                        active &= ~mask;
                         //verify
                         //print - warning the timing of this will effect concurrent reads! 
+                    	
+                    	printFlag |= mask;
                     }
                 }
             }
@@ -143,6 +148,7 @@ void pollReceivers(){
                     active &= ~mask;
                     //verify
                     //print - warning the timing of this will effect concurrent reads! 
+                    printFlag |= mask;
                 }  
             }
            
@@ -150,7 +156,13 @@ void pollReceivers(){
     }
 }
 
-
+void resetIEP(){
+	//Reset and enable IEP timer
+	// Set counter to 0
+    CT_IEP.TMR_CNT = 0x0;
+    // Enable counter
+    CT_IEP.TMR_GLB_CFG = 0x11;
+}
 
 /*
  * main.c
@@ -184,14 +196,108 @@ void main(void)
 	while (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) != PRU_RPMSG_SUCCESS) {
 		//wait for start signal reception to work
 	}
+	
+	
 
 	
+	
+    
 	unsigned long time = 0;
+	int delay = 0;
 	unsigned long count = 0;
-	unsigned bit;
 	unsigned i;
+	
+	unsigned x;
+	unsigned bit;
+	
+	//Initialize variables
+	for(i =0; i < SENSORS; i++){
+		codes[i] = 0;
+	}
+	high = 0;
+	active = 0;
+	printFlag = 0;
+	unsigned noPrint = 0;
+	
+	// while(1){
+	// 	time = 0;
+	// 	while(__R31 & pinMasks[0]){
+	// 		time++;
+	// 		__delay_cycles(200000); // number of ms
+	// 	}
+	// 	if(time > 0){
+	// 		payload[0] = '0' + i;
+	// 		payload[1] = ':';
+	// 		for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
+	// 			payload[x] = (time & bit) ? '1' : '0';
+	// 			bit >>= 1;
+	// 		}
+	// 		payload[18] = '\n';
+	// 		payload[19] = 0;
+	// 		len = 20;
+			
+	// 		pru_rpmsg_send(&transport, dst, src, payload, len);
+	// 	}
+	// }
+	
+	
 	while (1) {
-		time  = count;
+		resetIEP();
+		 //__delay_cycles(2000000);
+		pollReceivers();
+		
+		//verify and Print if we need to 
+		if(printFlag){
+			noPrint  = 0;
+			uint8_t i;
+			unsigned mask;
+			for(i = 0; i < SENSORS ; i++){
+    			mask = pinMasks[i];
+        		if(printFlag & mask){
+        			//TODO VERIFY
+        
+		        	payload[0] = '0' + i;
+					payload[1] = ':';
+					for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
+						payload[x] = (codes[i] & bit) ? '1' : '0';
+						bit >>= 1;
+					}
+					payload[18] = '\n';
+					payload[19] = 0;
+					len = 20;
+					
+					pru_rpmsg_send(&transport, dst, src, payload, len);
+        	
+        		}		
+        	}
+        	//clear print flags
+			printFlag = 0;
+        } else{
+        	noPrint += RESOLUTION;
+        	if(noPrint > 10000000){
+        		payload[0] = 'n' ;
+				payload[1] = 'o';
+				payload[2] = '\n';
+				payload[3] = 0;
+				len = 4;
+				pru_rpmsg_send(&transport, dst, src, payload, len);
+        		noPrint = 0;
+        	}
+        	
+        }
+		while( CT_IEP.TMR_CNT < SAMPLE_PERIOD);
+		time = CT_IEP.TMR_CNT;
+		// payload[0] = '0' + i;
+		// payload[1] = ':';
+		// for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
+		// 	payload[x] = (time & bit) ? '1' : '0';
+		// 	bit >>= 1;
+		// }
+		// payload[18] = '\n';
+		// payload[19] = 0;
+		// len = 20;
+		
+		// pru_rpmsg_send(&transport, dst, src, payload, len);
 		// payload[0] = __R31 & pinMasks[0] ? 'H' : 'L';
 		// payload[1] = '\n';
 		// payload[2] = 0;
@@ -208,48 +314,27 @@ void main(void)
 		// // 	}
 		// // }
 		// if(time > 0){
-		if(time > 0){
-			payload[0] = '1';
-			payload[1] = ':';
-			for(bit = 1 << 15, i = 2; i < 18; i++ ){ //2 to 18 = 16 bits
-				payload[i] = (time & bit) ? '1' : '0';
-				bit >>= 1;
-			}
-			payload[18] = '\n';
-			payload[19] = 0;
-			len = 20;
-			
-			pru_rpmsg_send(&transport, dst, src, payload, len);
-			
-			// payload[0] =(uint8_t) (time / 1000) + '0';
-			// time %= 1000;
-			// payload[1] = (uint8_t)(time / 100) + '0';
-			// time %= 100;
-			// payload[2] = (uint8_t)(time / 10) + '0';	
-			// time %= 10;
-			// payload[3] = (uint8_t) (time)  + '0';
-			// payload[4] = '\n';
-			// payload[5] = 0;
-			//len = 6;
-			// pru_rpmsg_send(&transport, dst, src, payload, len);
-		}
 		
+		
+		//LAST WORKING CLOCK PRINT
+		// if(time > 0){
+		// 	payload[0] = '1';
+		// 	payload[1] = ':';
+		// 	for(bit = 1 << 15, i = 2; i < 18; i++ ){ //2 to 18 = 16 bits
+		// 		payload[i] = (time & bit) ? '1' : '0';
+		// 		bit >>= 1;
+		// 	}
+		// 	payload[18] = '\n';
+		// 	payload[19] = 0;
+		// 	len = 20;
+			
+		// 	pru_rpmsg_send(&transport, dst, src, payload, len);
+			
 		// }
-		// /*
-		// payload[0] = 'H';
-		// payload[1] = 'I';
-		// payload[2] = '\n';
-		// payload[3] = 0;
-		// len = 4;
-		
 		
 	
-		
-		
-		// */
-	//	__delay_cycles(200000000);
 	
-		__delay_cycles(2000000);
-		count++;
+		//  __delay_cycles(2000000);
+		//count++;
 	}
 }
