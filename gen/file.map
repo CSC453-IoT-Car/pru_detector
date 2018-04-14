@@ -1,9 +1,9 @@
 ******************************************************************************
                      PRU Linker Unix v2.1.4                    
 ******************************************************************************
->> Linked Sat Apr 14 23:23:23 2018
+>> Linked Sat Apr 14 23:57:49 2018
 
-OUTPUT FILE NAME:   <gen/decay95.out>
+OUTPUT FILE NAME:   <gen/detector.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_noexit"  address: 00000000
 
 
@@ -61,8 +61,8 @@ section   page    origin      length       input sections
                   00000000    00000014     rtspruv3_le.lib : boot_special.obj (.text:_c_int00_noinit_noargs_noexit)
 
 .text      0    00000014    000007a8     
-                  00000014    0000024c     decay95.obj (.text:main)
-                  00000260    00000160     decay95.obj (.text:pollReceivers)
+                  00000014    0000024c     detector.obj (.text:main)
+                  00000260    00000160     detector.obj (.text:pollReceivers)
                   000003c0    000000d8     rpmsg_lib.lib : pru_rpmsg.object (.text:pru_rpmsg_send)
                   00000498    000000c4                   : pru_rpmsg.object (.text:pru_rpmsg_receive)
                   0000055c    00000060                   : pru_rpmsg.object (.text:pru_rpmsg_init)
@@ -72,7 +72,7 @@ section   page    origin      length       input sections
                   000006d8    0000005c                   : pru_virtqueue.object (.text:pru_virtqueue_add_used_buf)
                   00000734    00000034     rtspruv3_le.lib : memcpy.obj (.text)
                   00000768    00000028     rpmsg_lib.lib : pru_virtqueue.object (.text:pru_virtqueue_kick)
-                  00000790    0000001c     decay95.obj (.text:resetIEP)
+                  00000790    0000001c     detector.obj (.text:resetIEP)
                   000007ac    00000008     rtspruv3_le.lib : exit.obj (.text:abort)
                   000007b4    00000008                     : exit.obj (.text:loader_exit)
 
@@ -91,17 +91,17 @@ section   page    origin      length       input sections
                   00000250    000000fc     --HOLE--
 
 .data      1    000003f0    00000004     
-                  000003f0    00000004     decay95.obj (.data:pru_intc_map)
+                  000003f0    00000004     detector.obj (.data:pru_intc_map)
 
 .cinit     1    00000000    00000000     UNINITIALIZED
 
 .rodata    1    000003c8    00000028     
-                  000003c8    00000018     decay95.obj (.rodata:.string)
-                  000003e0    00000010     decay95.obj (.rodata:pinMasks)
+                  000003c8    00000018     detector.obj (.rodata:.string)
+                  000003e0    00000010     detector.obj (.rodata:pinMasks)
 
 .resource_table 
 *          1    0000034c    0000007c     
-                  0000034c    0000007c     decay95.obj (.resource_table:retain)
+                  0000034c    0000007c     detector.obj (.resource_table:retain)
 
 .creg.PRU_INTC.noload.near 
 *          2    00020000    00000000     NOLOAD SECTION
@@ -111,14 +111,14 @@ section   page    origin      length       input sections
 
 .creg.PRU_INTC.noload.far 
 *          2    00020000    00001504     NOLOAD SECTION
-                  00020000    00001504     decay95.obj (.creg.PRU_INTC.noload.far)
+                  00020000    00001504     detector.obj (.creg.PRU_INTC.noload.far)
 
 .creg.PRU_INTC.far 
 *          2    00021504    00000000     UNINITIALIZED
 
 .creg.PRU_CFG.noload.near 
 *          2    00026000    00000044     NOLOAD SECTION
-                  00026000    00000044     decay95.obj (.creg.PRU_CFG.noload.near)
+                  00026000    00000044     detector.obj (.creg.PRU_CFG.noload.near)
 
 .creg.PRU_CFG.near 
 *          2    00026044    00000000     UNINITIALIZED
@@ -137,7 +137,7 @@ section   page    origin      length       input sections
 
 .creg.PRU_IEP.noload.far 
 *          2    0002e000    0000031c     NOLOAD SECTION
-                  0002e000    0000031c     decay95.obj (.creg.PRU_IEP.noload.far)
+                  0002e000    0000031c     detector.obj (.creg.PRU_IEP.noload.far)
 
 .creg.PRU_IEP.far 
 *          2    0002e31c    00000000     UNINITIALIZED
