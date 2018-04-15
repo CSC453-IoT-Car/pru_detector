@@ -1,9 +1,9 @@
 ******************************************************************************
                      PRU Linker Unix v2.1.4                    
 ******************************************************************************
->> Linked Sat Apr 14 23:57:49 2018
+>> Linked Sun Apr 15 02:17:56 2018
 
-OUTPUT FILE NAME:   <gen/detector.out>
+OUTPUT FILE NAME:   <gen/decay95.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_noexit"  address: 00000000
 
 
@@ -12,7 +12,7 @@ MEMORY CONFIGURATION
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
 PAGE 0:
-  PRU_IMEM              00000000   00002000  000007bc  00001844  RWIX
+  PRU_IMEM              00000000   00002000  00000800  00001800  RWIX
 
 PAGE 1:
   PRU_DMEM_0_1          00000000   00002000  000003f4  00001c0c  RWIX
@@ -60,21 +60,21 @@ section   page    origin      length       input sections
 *          0    00000000    00000014     
                   00000000    00000014     rtspruv3_le.lib : boot_special.obj (.text:_c_int00_noinit_noargs_noexit)
 
-.text      0    00000014    000007a8     
-                  00000014    0000024c     detector.obj (.text:main)
-                  00000260    00000160     detector.obj (.text:pollReceivers)
-                  000003c0    000000d8     rpmsg_lib.lib : pru_rpmsg.object (.text:pru_rpmsg_send)
-                  00000498    000000c4                   : pru_rpmsg.object (.text:pru_rpmsg_receive)
-                  0000055c    00000060                   : pru_rpmsg.object (.text:pru_rpmsg_init)
-                  000005bc    00000060                   : pru_virtqueue.object (.text:pru_virtqueue_get_avail_buf)
-                  0000061c    00000060                   : pru_virtqueue.object (.text:pru_virtqueue_init)
-                  0000067c    0000005c                   : pru_rpmsg.object (.text:pru_rpmsg_channel)
-                  000006d8    0000005c                   : pru_virtqueue.object (.text:pru_virtqueue_add_used_buf)
-                  00000734    00000034     rtspruv3_le.lib : memcpy.obj (.text)
-                  00000768    00000028     rpmsg_lib.lib : pru_virtqueue.object (.text:pru_virtqueue_kick)
-                  00000790    0000001c     detector.obj (.text:resetIEP)
-                  000007ac    00000008     rtspruv3_le.lib : exit.obj (.text:abort)
-                  000007b4    00000008                     : exit.obj (.text:loader_exit)
+.text      0    00000014    000007ec     
+                  00000014    00000290     decay95.obj (.text:main)
+                  000002a4    00000160     decay95.obj (.text:pollReceivers)
+                  00000404    000000d8     rpmsg_lib.lib : pru_rpmsg.object (.text:pru_rpmsg_send)
+                  000004dc    000000c4                   : pru_rpmsg.object (.text:pru_rpmsg_receive)
+                  000005a0    00000060                   : pru_rpmsg.object (.text:pru_rpmsg_init)
+                  00000600    00000060                   : pru_virtqueue.object (.text:pru_virtqueue_get_avail_buf)
+                  00000660    00000060                   : pru_virtqueue.object (.text:pru_virtqueue_init)
+                  000006c0    0000005c                   : pru_rpmsg.object (.text:pru_rpmsg_channel)
+                  0000071c    0000005c                   : pru_virtqueue.object (.text:pru_virtqueue_add_used_buf)
+                  00000778    00000034     rtspruv3_le.lib : memcpy.obj (.text)
+                  000007ac    00000028     rpmsg_lib.lib : pru_virtqueue.object (.text:pru_virtqueue_kick)
+                  000007d4    0000001c     decay95.obj (.text:resetIEP)
+                  000007f0    00000008     rtspruv3_le.lib : exit.obj (.text:abort)
+                  000007f8    00000008                     : exit.obj (.text:loader_exit)
 
 .bss       1    00000000    0000024c     UNINITIALIZED
                   00000000    00000200     (.common:payload)
@@ -91,17 +91,17 @@ section   page    origin      length       input sections
                   00000250    000000fc     --HOLE--
 
 .data      1    000003f0    00000004     
-                  000003f0    00000004     detector.obj (.data:pru_intc_map)
+                  000003f0    00000004     decay95.obj (.data:pru_intc_map)
 
 .cinit     1    00000000    00000000     UNINITIALIZED
 
 .rodata    1    000003c8    00000028     
-                  000003c8    00000018     detector.obj (.rodata:.string)
-                  000003e0    00000010     detector.obj (.rodata:pinMasks)
+                  000003c8    00000018     decay95.obj (.rodata:.string)
+                  000003e0    00000010     decay95.obj (.rodata:pinMasks)
 
 .resource_table 
 *          1    0000034c    0000007c     
-                  0000034c    0000007c     detector.obj (.resource_table:retain)
+                  0000034c    0000007c     decay95.obj (.resource_table:retain)
 
 .creg.PRU_INTC.noload.near 
 *          2    00020000    00000000     NOLOAD SECTION
@@ -111,14 +111,14 @@ section   page    origin      length       input sections
 
 .creg.PRU_INTC.noload.far 
 *          2    00020000    00001504     NOLOAD SECTION
-                  00020000    00001504     detector.obj (.creg.PRU_INTC.noload.far)
+                  00020000    00001504     decay95.obj (.creg.PRU_INTC.noload.far)
 
 .creg.PRU_INTC.far 
 *          2    00021504    00000000     UNINITIALIZED
 
 .creg.PRU_CFG.noload.near 
 *          2    00026000    00000044     NOLOAD SECTION
-                  00026000    00000044     detector.obj (.creg.PRU_CFG.noload.near)
+                  00026000    00000044     decay95.obj (.creg.PRU_CFG.noload.near)
 
 .creg.PRU_CFG.near 
 *          2    00026044    00000000     UNINITIALIZED
@@ -137,7 +137,7 @@ section   page    origin      length       input sections
 
 .creg.PRU_IEP.noload.far 
 *          2    0002e000    0000031c     NOLOAD SECTION
-                  0002e000    0000031c     detector.obj (.creg.PRU_IEP.noload.far)
+                  0002e000    0000031c     decay95.obj (.creg.PRU_IEP.noload.far)
 
 .creg.PRU_IEP.far 
 *          2    0002e31c    00000000     UNINITIALIZED
@@ -157,7 +157,7 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 page  address   name                         
 ----  -------   ----                         
-0     000007b4  C$$EXIT                      
+0     000007f8  C$$EXIT                      
 2     00026000  CT_CFG                       
 2     0002e000  CT_IEP                       
 2     00020000  CT_INTC                      
@@ -231,7 +231,7 @@ abs   ffffffff  __binit__
 abs   ffffffff  __c_args__                   
 0     00000000  _c_int00_noinit_noargs_noexit
 1     0000024c  _stack                       
-0     000007ac  abort                        
+0     000007f0  abort                        
 1     00000240  active                       
 abs   ffffffff  binit                        
 1     00000200  codes                        
@@ -239,22 +239,22 @@ abs   ffffffff  binit
 1     00000210  highTime                     
 1     00000220  lowTime                      
 0     00000014  main                         
-0     00000734  memcpy                       
+0     00000778  memcpy                       
 1     00000000  payload                      
 1     000003e0  pinMasks                     
-0     00000260  pollReceivers                
+0     000002a4  pollReceivers                
 1     00000248  printFlag                    
 1     000003f0  pru_intc_map                 
-0     0000067c  pru_rpmsg_channel            
-0     0000055c  pru_rpmsg_init               
-0     00000498  pru_rpmsg_receive            
-0     000003c0  pru_rpmsg_send               
-0     000006d8  pru_virtqueue_add_used_buf   
-0     000005bc  pru_virtqueue_get_avail_buf  
-0     0000061c  pru_virtqueue_init           
-0     00000768  pru_virtqueue_kick           
+0     000006c0  pru_rpmsg_channel            
+0     000005a0  pru_rpmsg_init               
+0     000004dc  pru_rpmsg_receive            
+0     00000404  pru_rpmsg_send               
+0     0000071c  pru_virtqueue_add_used_buf   
+0     00000600  pru_virtqueue_get_avail_buf  
+0     00000660  pru_virtqueue_init           
+0     000007ac  pru_virtqueue_kick           
 1     00000230  pulseCount                   
-0     00000790  resetIEP                     
+0     000007d4  resetIEP                     
 1     0000034c  resourceTable                
 
 
@@ -264,19 +264,19 @@ page  address   name
 ----  -------   ----                         
 0     00000000  _c_int00_noinit_noargs_noexit
 0     00000014  main                         
-0     00000260  pollReceivers                
-0     000003c0  pru_rpmsg_send               
-0     00000498  pru_rpmsg_receive            
-0     0000055c  pru_rpmsg_init               
-0     000005bc  pru_virtqueue_get_avail_buf  
-0     0000061c  pru_virtqueue_init           
-0     0000067c  pru_rpmsg_channel            
-0     000006d8  pru_virtqueue_add_used_buf   
-0     00000734  memcpy                       
-0     00000768  pru_virtqueue_kick           
-0     00000790  resetIEP                     
-0     000007ac  abort                        
-0     000007b4  C$$EXIT                      
+0     000002a4  pollReceivers                
+0     00000404  pru_rpmsg_send               
+0     000004dc  pru_rpmsg_receive            
+0     000005a0  pru_rpmsg_init               
+0     00000600  pru_virtqueue_get_avail_buf  
+0     00000660  pru_virtqueue_init           
+0     000006c0  pru_rpmsg_channel            
+0     0000071c  pru_virtqueue_add_used_buf   
+0     00000778  memcpy                       
+0     000007ac  pru_virtqueue_kick           
+0     000007d4  resetIEP                     
+0     000007f0  abort                        
+0     000007f8  C$$EXIT                      
 1     00000000  payload                      
 1     00000200  codes                        
 1     00000210  highTime                     

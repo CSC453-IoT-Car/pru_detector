@@ -211,6 +211,7 @@ void main(void)
 	
 	unsigned x;
 	unsigned bit;
+	unsigned extracted;
 	
 	//Initialize variables
 	for(i =0; i < SENSORS; i++){
@@ -234,17 +235,28 @@ void main(void)
 			for(i = 0; i < SENSORS ; i++){
     			mask = pinMasks[i];
         		if(printFlag & mask){
-        			//TODO VERIFY
+        			//makes sure the signal is valid by checking bits 1 - 6 match 9 - 14
+        			extracted = codes[i] & 0x1F;
+        			if(extracted != (codes[i] & 0x1F00) >> 8){
+        				continue;
+        			}
         
 		        	payload[0] = '0' + i;
 					payload[1] = ':';
+					payload[2] = extracted & 1 ? '1' : '0';
+					payload[3] = extracted & 2 ? '1' : '0';
+					payload[4] = extracted & 4 ? '1' : '0';
+					payload[5] = extracted & 8 ? '1' : '0';
+					payload[6] = extracted & 16 ? '1' : '0';
+					payload[7] = '\n';
+					payload[8] = 0;
+					len = 9;
+					/* prints full message
 					for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
 						payload[x] = (codes[i] & bit) ? '1' : '0';
 						bit >>= 1;
 					}
-					payload[18] = '\n';
-					payload[19] = 0;
-					len = 20;
+					*/
 					
 					pru_rpmsg_send(&transport, dst, src, payload, len);
         	

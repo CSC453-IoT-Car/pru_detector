@@ -1,6 +1,6 @@
 ;******************************************************************************
 ;* PRU C/C++ Codegen                                              Unix v2.1.4 *
-;* Date/Time created: Sat Apr 14 23:57:48 2018                                *
+;* Date/Time created: Sun Apr 15 02:17:54 2018                                *
 ;******************************************************************************
 	.compiler_opts --abi=eabi --endian=little --hll_source=on --object_format=elf --silicon_version=3 --symdebug:dwarf --symdebug:dwarf_version=3 
 
@@ -301,8 +301,8 @@ $C$DW$38	.dwtag  DW_TAG_variable, DW_AT_name("printFlag")
 	.dwattr $C$DW$38, DW_AT_decl_file("detector.c")
 	.dwattr $C$DW$38, DW_AT_decl_line(0x5f)
 	.dwattr $C$DW$38, DW_AT_decl_column(0x0a)
-;	optpru /tmp/02769GyRT0l /tmp/02769moejTx 
-;	acpiapru -@/tmp/02769MMVvyH 
+;	optpru /tmp/022794OzS6Z /tmp/022794M3Y4P 
+;	acpiapru -@/tmp/02279U8xE1j 
 	.sect	".text:resetIEP"
 	.clink
 	.global	||resetIEP||
@@ -697,8 +697,13 @@ $C$DW$44	.dwtag  DW_TAG_subprogram, DW_AT_name("main")
 
 ||main||:
 ;* --------------------------------------------------------------------------*
-;* r0_0  assigned to $O$v1
-;* r14_0 assigned to $O$S1
+;* r14_0 assigned to $O$C6
+;* r1_0  assigned to $O$v1
+;* r0_0  assigned to $O$S1
+;* r1_0  assigned to $O$S2
+;* r1_0  assigned to $O$S3
+;* r1_0  assigned to $O$S4
+;* r1_0  assigned to $O$S5
 $C$DW$45	.dwtag  DW_TAG_variable, DW_AT_name("src")
 	.dwattr $C$DW$45, DW_AT_TI_symbol_name("src")
 	.dwattr $C$DW$45, DW_AT_type(*$C$DW$T$327)
@@ -711,25 +716,24 @@ $C$DW$47	.dwtag  DW_TAG_variable, DW_AT_name("len")
 	.dwattr $C$DW$47, DW_AT_TI_symbol_name("len")
 	.dwattr $C$DW$47, DW_AT_type(*$C$DW$T$327)
 	.dwattr $C$DW$47, DW_AT_location[DW_OP_breg8 4]
-;* r1_0  assigned to bit
-$C$DW$48	.dwtag  DW_TAG_variable, DW_AT_name("bit")
-	.dwattr $C$DW$48, DW_AT_TI_symbol_name("bit")
+;* r0_0  assigned to extracted
+$C$DW$48	.dwtag  DW_TAG_variable, DW_AT_name("extracted")
+	.dwattr $C$DW$48, DW_AT_TI_symbol_name("extracted")
 	.dwattr $C$DW$48, DW_AT_type(*$C$DW$T$11)
-	.dwattr $C$DW$48, DW_AT_location[DW_OP_reg4]
-;* r12_1 assigned to i
+	.dwattr $C$DW$48, DW_AT_location[DW_OP_reg0]
+;* r11_1 assigned to i
 $C$DW$49	.dwtag  DW_TAG_variable, DW_AT_name("i")
 	.dwattr $C$DW$49, DW_AT_TI_symbol_name("i")
 	.dwattr $C$DW$49, DW_AT_type(*$C$DW$T$323)
-	.dwattr $C$DW$49, DW_AT_location[DW_OP_regx 0x31]
-;* r10_0 assigned to $O$U78
-;* r11_0 assigned to $O$K135
-;* r4_0  assigned to $O$K109
-;* r13_0 assigned to $O$K106
-;* r0_0  assigned to $O$U100
-;* r15_0 assigned to $O$U94
-;* r9_0  assigned to $O$U81
-;* r12_0 assigned to $O$K89
-;* r8_0  assigned to $O$K50
+	.dwattr $C$DW$49, DW_AT_location[DW_OP_regx 0x2d]
+;* r10_0 assigned to $O$K160
+;* r4_0  assigned to $O$K139
+;* r12_0 assigned to $O$K135
+;* r0_0  assigned to $O$U88
+;* r11_0 assigned to $O$K98
+;* r9_0  assigned to $O$U78
+;* r8_0  assigned to $O$U81
+;* r13_0 assigned to $O$K59
 ;* r7_0  assigned to $O$K72
 ;* r0_0  assigned to $O$U60
 ;* r4_0  assigned to $O$K56
@@ -870,11 +874,12 @@ $C$DW$52	.dwtag  DW_TAG_TI_branch
         JAL       r3.w2, ||pru_rpmsg_channel|| ; [ALU_PRU] |190| pru_rpmsg_channel
         QBNE      ||$C$L14||, r14.w0, 0x00 ; [ALU_PRU] |190| 
 ;* --------------------------------------------------------------------------*
-        LDI       r12, 0x003a           ; [ALU_PRU] $O$K89
-        LDI       r13, 0x000a           ; [ALU_PRU] $O$K106
+        LDI       r11, 0x003a           ; [ALU_PRU] $O$K98
+        LDI       r12, 0x000a           ; [ALU_PRU] $O$K135
         ZERO      &r4, 4                ; [ALU_PRU] $O$K56
-        LDI32     r11, ||CT_IEP||       ; [ALU_PRU] $O$K135,CT_IEP
+        LDI32     r10, ||CT_IEP||       ; [ALU_PRU] $O$K160,CT_IEP
         LDI       r7, ||printFlag||     ; [ALU_PRU] $O$K72,printFlag
+        LDI       r13, ||codes||        ; [ALU_PRU] $O$K59,codes
         LDI       r5, ||payload||       ; [ALU_PRU] $O$K37,payload
 ;* --------------------------------------------------------------------------*
 ;*   BEGIN LOOP ||$C$L15||
@@ -940,8 +945,9 @@ $C$DW$53	.dwtag  DW_TAG_TI_branch
 ; 210 | unsigned i;                                                            
 ; 212 | unsigned x;                                                            
 ; 213 | unsigned bit;                                                          
-; 215 | //Initialize variables                                                 
-; 216 | for(i =0; i < SENSORS; i++){                                           
+; 214 | unsigned extracted;                                                    
+; 216 | //Initialize variables                                                 
+; 217 | for(i =0; i < SENSORS; i++){                                           
 ;----------------------------------------------------------------------
         LBBO      &r0.w0, r2, 4, 2      ; [ALU_PRU] |203| len
         QBGT      ||$C$L15||, r0.w0, 0x02 ; [ALU_PRU] |203| 
@@ -949,326 +955,368 @@ $C$DW$53	.dwtag  DW_TAG_TI_branch
         LBBO      &r0.b0, r5, 0, 1      ; [ALU_PRU] |203| $O$K37
         QBNE      ||$C$L15||, r0.b0, 0x67 ; [ALU_PRU] |203| 
 ;* --------------------------------------------------------------------------*
-        ADD       r8, r5, 0x01          ; [ALU_PRU] |203| $O$K50,$O$K37
-        LBBO      &r0.b0, r8, 0, 1      ; [ALU_PRU] |203| $O$K50
+        LBBO      &r0.b0, r5, 1, 1      ; [ALU_PRU] |203| $O$K37
         QBNE      ||$C$L15||, r0.b0, 0x6f ; [ALU_PRU] |203| 
 ;* --------------------------------------------------------------------------*
-        LDI       r0, ||codes||         ; [ALU_PRU] $O$U60,codes
+        MOV       r0, r13               ; [ALU_PRU] $O$U60,$O$K59
         LOOP      ||$C$L18||, 0x04      ; [ALU_PRU] 
 ;* --------------------------------------------------------------------------*
 ;*   BEGIN LOOP ||$C$L17||
 ;*
-;*   Loop source line                : 216
-;*   Loop closing brace source line  : 218
+;*   Loop source line                : 217
+;*   Loop closing brace source line  : 219
 ;*   Known Minimum Trip Count        : 4
 ;*   Known Maximum Trip Count        : 4
 ;*   Known Max Trip Count Factor     : 4
 ;* --------------------------------------------------------------------------*
 ||$C$L17||:    
-	.dwpsn	file "detector.c",line 217,column 3,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 218,column 3,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 217 | codes[i] = 0;                                                          
+; 218 | codes[i] = 0;                                                          
 ;----------------------------------------------------------------------
-        SBBO      &r4, r0, 0, 4         ; [ALU_PRU] |217| $O$U60,$O$K56
-	.dwpsn	file "detector.c",line 216,column 12,is_stmt,isa 0
-        ADD       r0, r0, 0x04          ; [ALU_PRU] |216| $O$U60,$O$U60
-        ; END LOOP ; [] |216| 
+        SBBO      &r4, r0, 0, 4         ; [ALU_PRU] |218| $O$U60,$O$K56
+	.dwpsn	file "detector.c",line 217,column 12,is_stmt,isa 0
+        ADD       r0, r0, 0x04          ; [ALU_PRU] |217| $O$U60,$O$U60
+        ; END LOOP ; [] |217| 
 ;* --------------------------------------------------------------------------*
 ||$C$L18||:    
-	.dwpsn	file "detector.c",line 219,column 2,is_stmt,isa 0
-;----------------------------------------------------------------------
-; 219 | high = 0;                                                              
-;----------------------------------------------------------------------
-        LDI       r0, ||high||          ; [ALU_PRU] |219| high
-        SBBO      &r4, r0, 0, 4         ; [ALU_PRU] |219| $O$K56
 	.dwpsn	file "detector.c",line 220,column 2,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 220 | active = 0;                                                            
+; 220 | high = 0;                                                              
 ;----------------------------------------------------------------------
-        LDI       r0, ||active||        ; [ALU_PRU] |220| active
+        LDI       r0, ||high||          ; [ALU_PRU] |220| high
         SBBO      &r4, r0, 0, 4         ; [ALU_PRU] |220| $O$K56
 	.dwpsn	file "detector.c",line 221,column 2,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 221 | printFlag = 0;                                                         
-; 222 | unsigned noPrint = 0;                                                  
-; 225 | while (1) {                                                            
+; 221 | active = 0;                                                            
 ;----------------------------------------------------------------------
-        SBBO      &r4, r7, 0, 4         ; [ALU_PRU] |221| $O$K72,$O$K56
+        LDI       r0, ||active||        ; [ALU_PRU] |221| active
+        SBBO      &r4, r0, 0, 4         ; [ALU_PRU] |221| $O$K56
+	.dwpsn	file "detector.c",line 222,column 2,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 222 | printFlag = 0;                                                         
+; 223 | unsigned noPrint = 0;                                                  
+; 226 | while (1) {                                                            
+;----------------------------------------------------------------------
+        SBBO      &r4, r7, 0, 4         ; [ALU_PRU] |222| $O$K72,$O$K56
 ;* --------------------------------------------------------------------------*
 ;*   BEGIN LOOP ||$C$L19||
 ;*
-;*   Loop source line                : 225
-;*   Loop closing brace source line  : 288
+;*   Loop source line                : 226
+;*   Loop closing brace source line  : 309
 ;*   Known Minimum Trip Count        : 1
 ;*   Known Maximum Trip Count        : 4294967295
 ;*   Known Max Trip Count Factor     : 1
 ;* --------------------------------------------------------------------------*
 ||$C$L19||:    
-	.dwpsn	file "detector.c",line 226,column 3,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 227,column 3,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 226 | resetIEP();                                                            
+; 227 | resetIEP();                                                            
 ;----------------------------------------------------------------------
 $C$DW$54	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$54, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$54, DW_AT_name("resetIEP")
 	.dwattr $C$DW$54, DW_AT_TI_call
-        JAL       r3.w2, ||resetIEP||   ; [ALU_PRU] |226| resetIEP
-	.dwpsn	file "detector.c",line 227,column 3,is_stmt,isa 0
+        JAL       r3.w2, ||resetIEP||   ; [ALU_PRU] |227| resetIEP
+	.dwpsn	file "detector.c",line 228,column 3,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 227 | pollReceivers();                                                       
-; 229 | //verify and Print if we need to                                       
+; 228 | pollReceivers();                                                       
+; 230 | //verify and Print if we need to                                       
 ;----------------------------------------------------------------------
 $C$DW$55	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$55, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$55, DW_AT_name("pollReceivers")
 	.dwattr $C$DW$55, DW_AT_TI_call
-        JAL       r3.w2, ||pollReceivers|| ; [ALU_PRU] |227| pollReceivers
-	.dwpsn	file "detector.c",line 230,column 3,is_stmt,isa 0
+        JAL       r3.w2, ||pollReceivers|| ; [ALU_PRU] |228| pollReceivers
+	.dwpsn	file "detector.c",line 231,column 3,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 230 | if(printFlag){                                                         
-; 231 |         noPrint  = 0;                                                  
-; 232 |         uint8_t i;                                                     
-; 233 |         unsigned mask;                                                 
+; 231 | if(printFlag){                                                         
+; 232 |         noPrint  = 0;                                                  
+; 233 |         uint8_t i;                                                     
+; 234 |         unsigned mask;                                                 
 ;----------------------------------------------------------------------
-        LBBO      &r0, r7, 0, 4         ; [ALU_PRU] |230| $O$v1,$O$K72
-        QBEQ      ||$C$L26||, r0, 0x00  ; [ALU_PRU] |230| $O$v1
+        LBBO      &r1, r7, 0, 4         ; [ALU_PRU] |231| $O$v1,$O$K72
+        QBEQ      ||$C$L32||, r1, 0x00  ; [ALU_PRU] |231| $O$v1
 ;* --------------------------------------------------------------------------*
-        LDI       r9, ||pinMasks||      ; [ALU_PRU] $O$U81,pinMasks
-        ZERO      &r10, 4               ; [ALU_PRU] $O$U78
-	.dwpsn	file "detector.c",line 234,column 8,is_stmt,isa 0
+        LDI       r8, ||pinMasks||      ; [ALU_PRU] $O$U81,pinMasks
+        LDI       r9, ||codes||         ; [ALU_PRU] $O$U78,codes
+	.dwpsn	file "detector.c",line 235,column 8,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 234 | for(i = 0; i < SENSORS ; i++){                                         
-; 235 | mask = pinMasks[i];                                                    
+; 235 | for(i = 0; i < SENSORS ; i++){                                         
+; 236 | mask = pinMasks[i];                                                    
 ;----------------------------------------------------------------------
-        LDI       r12.b1, 0x00          ; [ALU_PRU] |234| i
+        LDI       r11.b1, 0x00          ; [ALU_PRU] |235| i
 ;* --------------------------------------------------------------------------*
 ;*   BEGIN LOOP ||$C$L20||
 ;*
-;*   Loop source line                : 234
-;*   Loop closing brace source line  : 252
+;*   Loop source line                : 235
+;*   Loop closing brace source line  : 273
 ;*   Known Minimum Trip Count        : 4
 ;*   Known Maximum Trip Count        : 4
 ;*   Known Max Trip Count Factor     : 4
 ;* --------------------------------------------------------------------------*
 ||$C$L20||:    
-	.dwpsn	file "detector.c",line 236,column 11,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 237,column 11,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 236 | if(printFlag & mask){                                                  
-; 237 |         //TODO VERIFY                                                  
+; 237 | if(printFlag & mask){                                                  
+; 238 |         //TODO VERIFY                                                  
 ;----------------------------------------------------------------------
-        LBBO      &r1, r9, 0, 4         ; [ALU_PRU] |236| $O$U81
-        AND       r1, r1, r0            ; [ALU_PRU] |236| $O$v1
-        QBEQ      ||$C$L25||, r1, 0x00  ; [ALU_PRU] |236| 
+        LBBO      &r0, r8, 0, 4         ; [ALU_PRU] |237| $O$U81
+        AND       r0, r0, r1            ; [ALU_PRU] |237| $O$v1
+        QBEQ      ||$C$L31||, r0, 0x00  ; [ALU_PRU] |237| 
 ;* --------------------------------------------------------------------------*
 	.dwpsn	file "detector.c",line 239,column 12,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 239 | payload[0] = '0' + i;                                                  
-; 240 |         payload[1] = ':';                                              
+; 239 | extracted = codes[i] & 0x1F;                                           
+; 240 | if(extracted != (codes[i] & 0x1F00) >> 8){                             
 ;----------------------------------------------------------------------
-        ADD       r0.b0, r12.b1, 0x30   ; [ALU_PRU] |239| i
-        SBBO      &r0.b0, r5, 0, 1      ; [ALU_PRU] |239| $O$K37
-	.dwpsn	file "detector.c",line 241,column 10,is_stmt,isa 0
+        LBBO      &r14, r9, 0, 4        ; [ALU_PRU] |239| $O$C6,$O$U78
+        AND       r0, r14, 0x1f         ; [ALU_PRU] |239| extracted,$O$C6
+	.dwpsn	file "detector.c",line 241,column 13,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 241 | for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits           
+; 241 | continue;                                                              
 ;----------------------------------------------------------------------
-        LDI       r1, 0x8000            ; [ALU_PRU] |241| bit
-	.dwpsn	file "detector.c",line 240,column 6,is_stmt,isa 0
-        SBBO      &r12.b0, r8, 0, 1     ; [ALU_PRU] |240| $O$K50,$O$K89
-        LDI       r0, ||codes||         ; [ALU_PRU] codes
-        LBBO      &r15, r0, r10, 4      ; [ALU_PRU] $O$U94,$O$U78
-        ADD       r0, r5, 0x02          ; [ALU_PRU] $O$U100,$O$K37
-        LOOP      ||$C$L24||, 0x10      ; [ALU_PRU] 
+        LSR       r14, r14, 0x08        ; [ALU_PRU] |241| $O$C6
+        AND       r14, r14, 0x1f        ; [ALU_PRU] |241| 
+        QBNE      ||$C$L31||, r14, r0   ; [ALU_PRU] |241| $O$U88
 ;* --------------------------------------------------------------------------*
-;*   BEGIN LOOP ||$C$L21||
-;*
-;*   Loop source line                : 241
-;*   Loop closing brace source line  : 244
-;*   Known Minimum Trip Count        : 16
-;*   Known Maximum Trip Count        : 16
-;*   Known Max Trip Count Factor     : 16
-;* --------------------------------------------------------------------------*
-||$C$L21||:    
-	.dwpsn	file "detector.c",line 242,column 7,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 244,column 12,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 242 | payload[x] = (codes[i] & bit) ? '1' : '0';                             
+; 244 | payload[0] = '0' + i;                                                  
 ;----------------------------------------------------------------------
-        AND       r14, r15, r1          ; [ALU_PRU] |242| $O$U94,bit
-        QBEQ      ||$C$L22||, r14, 0x00 ; [ALU_PRU] |242| 
-;* --------------------------------------------------------------------------*
-        LDI       r14.b0, 0x31          ; [ALU_PRU] |242| $O$S1
-        JMP       ||$C$L23||            ; [ALU_PRU] |242| 
-;* --------------------------------------------------------------------------*
-||$C$L22||:    
-        LDI       r14.b0, 0x30          ; [ALU_PRU] |242| $O$S1
-;* --------------------------------------------------------------------------*
-||$C$L23||:    
-        SBBO      &r14.b0, r0, 0, 1     ; [ALU_PRU] |242| $O$U100,$O$S1
-	.dwpsn	file "detector.c",line 243,column 7,is_stmt,isa 0
-;----------------------------------------------------------------------
-; 243 | bit >>= 1;                                                             
-;----------------------------------------------------------------------
-        LSR       r1, r1, 0x01          ; [ALU_PRU] |243| bit,bit
-	.dwpsn	file "detector.c",line 241,column 32,is_stmt,isa 0
-        ADD       r0, r0, 0x01          ; [ALU_PRU] |241| $O$U100,$O$U100
-        ; END LOOP ; [] |241| 
-;* --------------------------------------------------------------------------*
-||$C$L24||:    
+        ADD       r1.b0, r11.b1, 0x30   ; [ALU_PRU] |244| i
+        SBBO      &r1.b0, r5, 0, 1      ; [ALU_PRU] |244| $O$K37
 	.dwpsn	file "detector.c",line 245,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 245 | payload[18] = '\n';                                                    
-; 246 | payload[19] = 0;                                                       
+; 245 | payload[1] = ':';                                                      
 ;----------------------------------------------------------------------
-        SBBO      &r13.b0, r5, 18, 1    ; [ALU_PRU] |245| $O$K37,$O$K106
-	.dwpsn	file "detector.c",line 247,column 6,is_stmt,isa 0
-;----------------------------------------------------------------------
-; 247 | len = 20;                                                              
-;----------------------------------------------------------------------
-        LDI       r0.w0, 0x14           ; [ALU_PRU] |247| 
+        SBBO      &r11.b0, r5, 1, 1     ; [ALU_PRU] |245| $O$K37,$O$K98
 	.dwpsn	file "detector.c",line 246,column 6,is_stmt,isa 0
-        SBBO      &r4.b0, r5, 19, 1     ; [ALU_PRU] |246| $O$K37,$O$K109
-	.dwpsn	file "detector.c",line 249,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 249 | pru_rpmsg_send(&transport, dst, src, payload, len);                    
+; 246 | payload[2] = extracted & 1 ? '1' : '0';                                
 ;----------------------------------------------------------------------
-        ADD       r14, r2, 6            ; [ALU_PRU] |249| transport,transport
-        MOV       r17, r5               ; [ALU_PRU] |249| $O$K37
-        LDI       r18.w0, 0x0014        ; [ALU_PRU] |249| 
+        QBBC      ||$C$L21||, r0, 0x00  ; [ALU_PRU] |246| $O$U88
+;* --------------------------------------------------------------------------*
+        LDI       r1.b0, 0x31           ; [ALU_PRU] |246| $O$S5
+        JMP       ||$C$L22||            ; [ALU_PRU] |246| 
+;* --------------------------------------------------------------------------*
+||$C$L21||:    
+        LDI       r1.b0, 0x30           ; [ALU_PRU] |246| $O$S5
+;* --------------------------------------------------------------------------*
+||$C$L22||:    
+        SBBO      &r1.b0, r5, 2, 1      ; [ALU_PRU] |246| $O$K37,$O$S5
 	.dwpsn	file "detector.c",line 247,column 6,is_stmt,isa 0
-        SBBO      &r0.w0, r2, 4, 2      ; [ALU_PRU] |247| len
+;----------------------------------------------------------------------
+; 247 | payload[3] = extracted & 2 ? '1' : '0';                                
+;----------------------------------------------------------------------
+        QBBC      ||$C$L23||, r0, 0x01  ; [ALU_PRU] |247| extracted
+;* --------------------------------------------------------------------------*
+        LDI       r1.b0, 0x31           ; [ALU_PRU] |247| $O$S4
+        JMP       ||$C$L24||            ; [ALU_PRU] |247| 
+;* --------------------------------------------------------------------------*
+||$C$L23||:    
+        LDI       r1.b0, 0x30           ; [ALU_PRU] |247| $O$S4
+;* --------------------------------------------------------------------------*
+||$C$L24||:    
+        SBBO      &r1.b0, r5, 3, 1      ; [ALU_PRU] |247| $O$K37,$O$S4
+	.dwpsn	file "detector.c",line 248,column 6,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 248 | payload[4] = extracted & 4 ? '1' : '0';                                
+;----------------------------------------------------------------------
+        QBBC      ||$C$L25||, r0, 0x02  ; [ALU_PRU] |248| extracted
+;* --------------------------------------------------------------------------*
+        LDI       r1.b0, 0x31           ; [ALU_PRU] |248| $O$S3
+        JMP       ||$C$L26||            ; [ALU_PRU] |248| 
+;* --------------------------------------------------------------------------*
+||$C$L25||:    
+        LDI       r1.b0, 0x30           ; [ALU_PRU] |248| $O$S3
+;* --------------------------------------------------------------------------*
+||$C$L26||:    
+        SBBO      &r1.b0, r5, 4, 1      ; [ALU_PRU] |248| $O$K37,$O$S3
 	.dwpsn	file "detector.c",line 249,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 253 | //clear print flags                                                    
+; 249 | payload[5] = extracted & 8 ? '1' : '0';                                
 ;----------------------------------------------------------------------
-        LBBO      &r0.w0, r2, 2, 2      ; [ALU_PRU] |249| dst
-        MOV       r15, r0.w0            ; [ALU_PRU] |249| 
-        LBBO      &r0.w0, r2, 0, 2      ; [ALU_PRU] |249| src
-        MOV       r16, r0.w0            ; [ALU_PRU] |249| 
+        QBBC      ||$C$L27||, r0, 0x03  ; [ALU_PRU] |249| extracted
+;* --------------------------------------------------------------------------*
+        LDI       r1.b0, 0x31           ; [ALU_PRU] |249| $O$S2
+        JMP       ||$C$L28||            ; [ALU_PRU] |249| 
+;* --------------------------------------------------------------------------*
+||$C$L27||:    
+        LDI       r1.b0, 0x30           ; [ALU_PRU] |249| $O$S2
+;* --------------------------------------------------------------------------*
+||$C$L28||:    
+        SBBO      &r1.b0, r5, 5, 1      ; [ALU_PRU] |249| $O$K37,$O$S2
+	.dwpsn	file "detector.c",line 250,column 6,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 250 | payload[6] = extracted & 16 ? '1' : '0';                               
+;----------------------------------------------------------------------
+        QBBC      ||$C$L29||, r0, 0x04  ; [ALU_PRU] |250| extracted
+;* --------------------------------------------------------------------------*
+        LDI       r0.b0, 0x31           ; [ALU_PRU] |250| $O$S1
+        JMP       ||$C$L30||            ; [ALU_PRU] |250| 
+;* --------------------------------------------------------------------------*
+||$C$L29||:    
+        LDI       r0.b0, 0x30           ; [ALU_PRU] |250| $O$S1
+;* --------------------------------------------------------------------------*
+||$C$L30||:    
+        SBBO      &r0.b0, r5, 6, 1      ; [ALU_PRU] |250| $O$K37,$O$S1
+	.dwpsn	file "detector.c",line 251,column 6,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 251 | payload[7] = '\n';                                                     
+; 252 | payload[8] = 0;                                                        
+;----------------------------------------------------------------------
+        SBBO      &r12.b0, r5, 7, 1     ; [ALU_PRU] |251| $O$K37,$O$K135
+	.dwpsn	file "detector.c",line 253,column 6,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 253 | len = 9;                                                               
+;----------------------------------------------------------------------
+        LDI       r0.w0, 0x09           ; [ALU_PRU] |253| 
+	.dwpsn	file "detector.c",line 252,column 6,is_stmt,isa 0
+        SBBO      &r4.b0, r5, 8, 1      ; [ALU_PRU] |252| $O$K37,$O$K139
+	.dwpsn	file "detector.c",line 270,column 6,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 270 | pru_rpmsg_send(&transport, dst, src, payload, len);                    
+;----------------------------------------------------------------------
+        ADD       r14, r2, 6            ; [ALU_PRU] |270| transport,transport
+        MOV       r17, r5               ; [ALU_PRU] |270| $O$K37
+        LDI       r18.w0, 0x0009        ; [ALU_PRU] |270| 
+	.dwpsn	file "detector.c",line 253,column 6,is_stmt,isa 0
+        SBBO      &r0.w0, r2, 4, 2      ; [ALU_PRU] |253| len
+	.dwpsn	file "detector.c",line 270,column 6,is_stmt,isa 0
+;----------------------------------------------------------------------
+; 274 | //clear print flags                                                    
+;----------------------------------------------------------------------
+        LBBO      &r0.w0, r2, 2, 2      ; [ALU_PRU] |270| dst
+        MOV       r15, r0.w0            ; [ALU_PRU] |270| 
+        LBBO      &r0.w0, r2, 0, 2      ; [ALU_PRU] |270| src
+        MOV       r16, r0.w0            ; [ALU_PRU] |270| 
 $C$DW$56	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$56, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$56, DW_AT_name("pru_rpmsg_send")
 	.dwattr $C$DW$56, DW_AT_TI_call
-        JAL       r3.w2, ||pru_rpmsg_send|| ; [ALU_PRU] |249| pru_rpmsg_send
-        LBBO      &r0, r7, 0, 4         ; [ALU_PRU] |249| $O$v1,$O$K72
+        JAL       r3.w2, ||pru_rpmsg_send|| ; [ALU_PRU] |270| pru_rpmsg_send
+        LBBO      &r1, r7, 0, 4         ; [ALU_PRU] |270| $O$v1,$O$K72
 ;* --------------------------------------------------------------------------*
-||$C$L25||:    
-	.dwpsn	file "detector.c",line 234,column 15,is_stmt,isa 0
-        ADD       r10, r10, 0x04        ; [ALU_PRU] |234| $O$U78,$O$U78
-        ADD       r12.b1, r12.b1, 0x01  ; [ALU_PRU] |234| i,i
-        ADD       r9, r9, 0x04          ; [ALU_PRU] |234| $O$U81,$O$U81
-        QBGT      ||$C$L20||, r12.b1, 0x04 ; [ALU_PRU] |234| i
+||$C$L31||:    
+	.dwpsn	file "detector.c",line 235,column 15,is_stmt,isa 0
+        ADD       r9, r9, 0x04          ; [ALU_PRU] |235| $O$U78,$O$U78
+        ADD       r11.b1, r11.b1, 0x01  ; [ALU_PRU] |235| i,i
+        ADD       r8, r8, 0x04          ; [ALU_PRU] |235| $O$U81,$O$U81
+        QBGT      ||$C$L20||, r11.b1, 0x04 ; [ALU_PRU] |235| i
 ;* --------------------------------------------------------------------------*
-	.dwpsn	file "detector.c",line 254,column 4,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 275,column 4,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 254 | printFlag = 0;                                                         
-; 256 | //     else{  //print "no" if seen nothing in 10 seconds to confirm sti
+; 275 | printFlag = 0;                                                         
+; 277 | //     else{  //print "no" if seen nothing in 10 seconds to confirm sti
 ;     | l running                                                              
-; 257 | //          noPrint += RESOLUTION;                                     
-; 258 | //          if(noPrint > 10000000){                                    
-; 259 | //                  payload[0] = 'n' ;                                 
-; 260 |         // payload[1] = 'o';                                           
-; 261 |         // payload[2] = '\n';                                          
-; 262 |         // payload[3] = 0;                                             
-; 263 |         // len = 4;                                                    
-; 264 |         // pru_rpmsg_send(&transport, dst, src, payload, len);         
-; 265 | //                  noPrint = 0;                                       
-; 266 | //          }                                                          
-; 268 | //     }                                                               
-; 270 | //Check for message                                                    
+; 278 | //          noPrint += RESOLUTION;                                     
+; 279 | //          if(noPrint > 10000000){                                    
+; 280 | //                  payload[0] = 'n' ;                                 
+; 281 |         // payload[1] = 'o';                                           
+; 282 |         // payload[2] = '\n';                                          
+; 283 |         // payload[3] = 0;                                             
+; 284 |         // len = 4;                                                    
+; 285 |         // pru_rpmsg_send(&transport, dst, src, payload, len);         
+; 286 | //                  noPrint = 0;                                       
+; 287 | //          }                                                          
+; 289 | //     }                                                               
+; 291 | //Check for message                                                    
 ;----------------------------------------------------------------------
-        SBBO      &r4, r7, 0, 4         ; [ALU_PRU] |254| $O$K72,$O$K56
+        SBBO      &r4, r7, 0, 4         ; [ALU_PRU] |275| $O$K72,$O$K56
 ;* --------------------------------------------------------------------------*
-||$C$L26||:    
-	.dwpsn	file "detector.c",line 271,column 6,is_stmt,isa 0
+||$C$L32||:    
+	.dwpsn	file "detector.c",line 292,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 271 | if(__R31 & HOST_INT){                                                  
+; 292 | if(__R31 & HOST_INT){                                                  
 ;----------------------------------------------------------------------
-        QBBC      ||$C$L28||, r31, 0x1f ; [ALU_PRU] |271| 
+        QBBC      ||$C$L34||, r31, 0x1f ; [ALU_PRU] |292| 
 ;* --------------------------------------------------------------------------*
-	.dwpsn	file "detector.c",line 273,column 4,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 294,column 4,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 273 | CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;                          
+; 294 | CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;                          
 ;----------------------------------------------------------------------
-        LDI32     r0, 0xfffffc00        ; [ALU_PRU] |273| 
-        LBBO      &r1, r6, 0, 4         ; [ALU_PRU] |273| $O$K4
-	.dwpsn	file "detector.c",line 274,column 4,is_stmt,isa 0
+        LDI32     r0, 0xfffffc00        ; [ALU_PRU] |294| 
+        LBBO      &r1, r6, 0, 4         ; [ALU_PRU] |294| $O$K4
+	.dwpsn	file "detector.c",line 295,column 4,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 274 | if (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPM
+; 295 | if (pru_rpmsg_receive(&transport, &src, &dst, payload, &len) == PRU_RPM
 ;     | SG_SUCCESS) {                                                          
 ;----------------------------------------------------------------------
-        ADD       r14, r2, 6            ; [ALU_PRU] |274| transport,transport
-        ADD       r15, r2, 0            ; [ALU_PRU] |274| src,src
-        ADD       r16, r2, 2            ; [ALU_PRU] |274| dst,dst
-        MOV       r17, r5               ; [ALU_PRU] |274| $O$K37
-        ADD       r18, r2, 4            ; [ALU_PRU] |274| len,len
-	.dwpsn	file "detector.c",line 273,column 4,is_stmt,isa 0
-        AND       r0, r1, r0            ; [ALU_PRU] |273| 
-        OR        r0, r0, 0x13          ; [ALU_PRU] |273| 
-        SBBO      &r0, r6, 0, 4         ; [ALU_PRU] |273| $O$K4
-	.dwpsn	file "detector.c",line 274,column 4,is_stmt,isa 0
+        ADD       r14, r2, 6            ; [ALU_PRU] |295| transport,transport
+        ADD       r15, r2, 0            ; [ALU_PRU] |295| src,src
+        ADD       r16, r2, 2            ; [ALU_PRU] |295| dst,dst
+        MOV       r17, r5               ; [ALU_PRU] |295| $O$K37
+        ADD       r18, r2, 4            ; [ALU_PRU] |295| len,len
+	.dwpsn	file "detector.c",line 294,column 4,is_stmt,isa 0
+        AND       r0, r1, r0            ; [ALU_PRU] |294| 
+        OR        r0, r0, 0x13          ; [ALU_PRU] |294| 
+        SBBO      &r0, r6, 0, 4         ; [ALU_PRU] |294| $O$K4
+	.dwpsn	file "detector.c",line 295,column 4,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 275 | if(len >= 4 && payload[0] == 's' && payload[1] == 't' && payload[2] ==
+; 296 | if(len >= 4 && payload[0] == 's' && payload[1] == 't' && payload[2] ==
 ;     | 'o' && payload[3] == 'p'){                                             
-; 276 |         //got stop command                                             
+; 297 |         //got stop command                                             
 ;----------------------------------------------------------------------
 $C$DW$57	.dwtag  DW_TAG_TI_branch
 	.dwattr $C$DW$57, DW_AT_low_pc(0x00)
 	.dwattr $C$DW$57, DW_AT_name("pru_rpmsg_receive")
 	.dwattr $C$DW$57, DW_AT_TI_call
-        JAL       r3.w2, ||pru_rpmsg_receive|| ; [ALU_PRU] |274| pru_rpmsg_receive
-        QBNE      ||$C$L27||, r14.w0, 0x00 ; [ALU_PRU] |274| 
+        JAL       r3.w2, ||pru_rpmsg_receive|| ; [ALU_PRU] |295| pru_rpmsg_receive
+        QBNE      ||$C$L33||, r14.w0, 0x00 ; [ALU_PRU] |295| 
 ;* --------------------------------------------------------------------------*
-	.dwpsn	file "detector.c",line 277,column 6,is_stmt,isa 0
+	.dwpsn	file "detector.c",line 298,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 277 | goto waitForMessage;                                                   
-; 279 | } else{                                                                
+; 298 | goto waitForMessage;                                                   
+; 300 | } else{                                                                
 ;----------------------------------------------------------------------
-        LBBO      &r0.w0, r2, 4, 2      ; [ALU_PRU] |277| len
-        QBGT      ||$C$L28||, r0.w0, 0x04 ; [ALU_PRU] |277| 
+        LBBO      &r0.w0, r2, 4, 2      ; [ALU_PRU] |298| len
+        QBGT      ||$C$L34||, r0.w0, 0x04 ; [ALU_PRU] |298| 
 ;* --------------------------------------------------------------------------*
-        LBBO      &r0.b0, r5, 0, 1      ; [ALU_PRU] |277| $O$K37
-        QBNE      ||$C$L28||, r0.b0, 0x73 ; [ALU_PRU] |277| 
+        LBBO      &r0.b0, r5, 0, 1      ; [ALU_PRU] |298| $O$K37
+        QBNE      ||$C$L34||, r0.b0, 0x73 ; [ALU_PRU] |298| 
 ;* --------------------------------------------------------------------------*
-        LBBO      &r0.b0, r8, 0, 1      ; [ALU_PRU] |277| $O$K50
-        QBNE      ||$C$L28||, r0.b0, 0x74 ; [ALU_PRU] |277| 
+        LBBO      &r0.b0, r5, 1, 1      ; [ALU_PRU] |298| $O$K37
+        QBNE      ||$C$L34||, r0.b0, 0x74 ; [ALU_PRU] |298| 
 ;* --------------------------------------------------------------------------*
-        LBBO      &r0.b0, r5, 2, 1      ; [ALU_PRU] |277| $O$K37
-        QBNE      ||$C$L28||, r0.b0, 0x6f ; [ALU_PRU] |277| 
+        LBBO      &r0.b0, r5, 2, 1      ; [ALU_PRU] |298| $O$K37
+        QBNE      ||$C$L34||, r0.b0, 0x6f ; [ALU_PRU] |298| 
 ;* --------------------------------------------------------------------------*
-        LBBO      &r0.b0, r5, 3, 1      ; [ALU_PRU] |277| $O$K37
-        QBEQ      ||$C$L15||, r0.b0, 0x70 ; [ALU_PRU] |277| 
+        LBBO      &r0.b0, r5, 3, 1      ; [ALU_PRU] |298| $O$K37
+        QBEQ      ||$C$L15||, r0.b0, 0x70 ; [ALU_PRU] |298| 
 ;* --------------------------------------------------------------------------*
-        JMP       ||$C$L28||            ; [ALU_PRU] |277| 
+        JMP       ||$C$L34||            ; [ALU_PRU] |298| 
 ;* --------------------------------------------------------------------------*
-||$C$L27||:    
-	.dwpsn	file "detector.c",line 280,column 6,is_stmt,isa 0
+||$C$L33||:    
+	.dwpsn	file "detector.c",line 301,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 280 | CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;                          
-; 286 | while( CT_IEP.TMR_CNT < SAMPLE_PERIOD);                                
+; 301 | CT_INTC.SICR_bit.STS_CLR_IDX = FROM_ARM_HOST;                          
+; 307 | while( CT_IEP.TMR_CNT < SAMPLE_PERIOD);                                
 ;----------------------------------------------------------------------
-        LDI32     r0, 0xfffffc00        ; [ALU_PRU] |280| 
-        LBBO      &r1, r6, 0, 4         ; [ALU_PRU] |280| $O$K4
-        AND       r0, r1, r0            ; [ALU_PRU] |280| 
-        OR        r0, r0, 0x13          ; [ALU_PRU] |280| 
-        SBBO      &r0, r6, 0, 4         ; [ALU_PRU] |280| $O$K4
+        LDI32     r0, 0xfffffc00        ; [ALU_PRU] |301| 
+        LBBO      &r1, r6, 0, 4         ; [ALU_PRU] |301| $O$K4
+        AND       r0, r1, r0            ; [ALU_PRU] |301| 
+        OR        r0, r0, 0x13          ; [ALU_PRU] |301| 
+        SBBO      &r0, r6, 0, 4         ; [ALU_PRU] |301| $O$K4
 ;* --------------------------------------------------------------------------*
-;*   BEGIN LOOP ||$C$L28||
+;*   BEGIN LOOP ||$C$L34||
 ;*
-;*   Loop source line                : 286
-;*   Loop closing brace source line  : 286
+;*   Loop source line                : 307
+;*   Loop closing brace source line  : 307
 ;*   Known Minimum Trip Count        : 1
 ;*   Known Maximum Trip Count        : 4294967295
 ;*   Known Max Trip Count Factor     : 1
 ;* --------------------------------------------------------------------------*
-||$C$L28||:    
-	.dwpsn	file "detector.c",line 225,column 9,is_stmt,isa 0
-        LDI       r0, 0x07d0            ; [ALU_PRU] |225| 
-        LBBO      &r1, r11, 12, 4       ; [ALU_PRU] |225| $O$K135
-        QBGE      ||$C$L19||, r0, r1    ; [ALU_PRU] |225| 
+||$C$L34||:    
+	.dwpsn	file "detector.c",line 226,column 9,is_stmt,isa 0
+        LDI       r0, 0x07d0            ; [ALU_PRU] |226| 
+        LBBO      &r1, r10, 12, 4       ; [ALU_PRU] |226| $O$K160
+        QBGE      ||$C$L19||, r0, r1    ; [ALU_PRU] |226| 
 ;* --------------------------------------------------------------------------*
-        JMP       ||$C$L28||            ; [ALU_PRU] |225| 
+        JMP       ||$C$L34||            ; [ALU_PRU] |226| 
 ;* --------------------------------------------------------------------------*
 	.dwattr $C$DW$44, DW_AT_TI_end_file("detector.c")
-	.dwattr $C$DW$44, DW_AT_TI_end_line(0x121)
+	.dwattr $C$DW$44, DW_AT_TI_end_line(0x136)
 	.dwattr $C$DW$44, DW_AT_TI_end_column(0x01)
 	.dwendentry
 	.dwendtag $C$DW$44
