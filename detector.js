@@ -1,6 +1,6 @@
 var fs = require('fs');
 var readline = require('readline');
-var b = require("bonescript");
+//var b = require("bonescript");
 var pruFile = '/dev/rpmsg_pru31';
 
 var reading = false;
