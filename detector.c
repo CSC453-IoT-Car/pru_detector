@@ -204,13 +204,8 @@ void main(void)
 	} 
 	
     
-	unsigned long time = 0;
-	int delay = 0;
-	unsigned long count = 0;
 	unsigned i;
-	
 	unsigned x;
-	unsigned bit;
 	unsigned extracted;
 	
 	//Initialize variables
@@ -243,11 +238,11 @@ void main(void)
         
 		        	payload[0] = '0' + i;
 					payload[1] = ':';
-					payload[2] = extracted & 1 ? '1' : '0';
-					payload[3] = extracted & 2 ? '1' : '0';
+					payload[2] = extracted & 16 ? '1' : '0';
+					payload[3] = extracted & 8 ? '1' : '0';
 					payload[4] = extracted & 4 ? '1' : '0';
-					payload[5] = extracted & 8 ? '1' : '0';
-					payload[6] = extracted & 16 ? '1' : '0';
+					payload[5] = extracted & 2 ? '1' : '0';
+					payload[6] = extracted & 1 ? '1' : '0';
 					payload[7] = '\n';
 					payload[8] = 0;
 					len = 9;
