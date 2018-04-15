@@ -1,6 +1,6 @@
 ;******************************************************************************
 ;* PRU C/C++ Codegen                                              Unix v2.1.4 *
-;* Date/Time created: Sun Apr 15 03:01:53 2018                                *
+;* Date/Time created: Sun Apr 15 07:02:55 2018                                *
 ;******************************************************************************
 	.compiler_opts --abi=eabi --endian=little --hll_source=on --object_format=elf --silicon_version=3 --symdebug:dwarf --symdebug:dwarf_version=3 
 
@@ -301,8 +301,8 @@ $C$DW$38	.dwtag  DW_TAG_variable, DW_AT_name("printFlag")
 	.dwattr $C$DW$38, DW_AT_decl_file("detector.c")
 	.dwattr $C$DW$38, DW_AT_decl_line(0x5f)
 	.dwattr $C$DW$38, DW_AT_decl_column(0x0a)
-;	optpru /tmp/025524kBWgK /tmp/02552qAdPmk 
-;	acpiapru -@/tmp/02552YxbuEQ 
+;	optpru /tmp/035510f6YAl /tmp/03551qaTk1w 
+;	acpiapru -@/tmp/03551PRargb 
 	.sect	".text:resetIEP"
 	.clink
 	.global	||resetIEP||
@@ -726,7 +726,7 @@ $C$DW$49	.dwtag  DW_TAG_variable, DW_AT_name("i")
 	.dwattr $C$DW$49, DW_AT_TI_symbol_name("i")
 	.dwattr $C$DW$49, DW_AT_type(*$C$DW$T$323)
 	.dwattr $C$DW$49, DW_AT_location[DW_OP_regx 0x2d]
-;* r10_0 assigned to $O$K160
+;* r10_0 assigned to $O$K159
 ;* r4_0  assigned to $O$K139
 ;* r12_0 assigned to $O$K135
 ;* r0_0  assigned to $O$U88
@@ -877,7 +877,7 @@ $C$DW$52	.dwtag  DW_TAG_TI_branch
         LDI       r11, 0x003a           ; [ALU_PRU] $O$K98
         LDI       r12, 0x000a           ; [ALU_PRU] $O$K135
         ZERO      &r4, 4                ; [ALU_PRU] $O$K56
-        LDI32     r10, ||CT_IEP||       ; [ALU_PRU] $O$K160,CT_IEP
+        LDI32     r10, ||CT_IEP||       ; [ALU_PRU] $O$K159,CT_IEP
         LDI       r7, ||printFlag||     ; [ALU_PRU] $O$K72,printFlag
         LDI       r13, ||codes||        ; [ALU_PRU] $O$K59,codes
         LDI       r5, ||payload||       ; [ALU_PRU] $O$K37,payload
@@ -1166,9 +1166,9 @@ $C$DW$55	.dwtag  DW_TAG_TI_branch
         SBBO      &r12.b0, r5, 7, 1     ; [ALU_PRU] |246| $O$K37,$O$K135
 	.dwpsn	file "detector.c",line 248,column 6,is_stmt,isa 0
 ;----------------------------------------------------------------------
-; 248 | len = 9;                                                               
+; 248 | len = 8;                                                               
 ;----------------------------------------------------------------------
-        LDI       r0.w0, 0x09           ; [ALU_PRU] |248| 
+        LDI       r0.w0, 0x08           ; [ALU_PRU] |248| 
 	.dwpsn	file "detector.c",line 247,column 6,is_stmt,isa 0
         SBBO      &r4.b0, r5, 8, 1      ; [ALU_PRU] |247| $O$K37,$O$K139
 	.dwpsn	file "detector.c",line 256,column 6,is_stmt,isa 0
@@ -1177,7 +1177,7 @@ $C$DW$55	.dwtag  DW_TAG_TI_branch
 ;----------------------------------------------------------------------
         ADD       r14, r2, 6            ; [ALU_PRU] |256| transport,transport
         MOV       r17, r5               ; [ALU_PRU] |256| $O$K37
-        LDI       r18.w0, 0x0009        ; [ALU_PRU] |256| 
+        LDI       r18.w0, 0x0008        ; [ALU_PRU] |256| 
 	.dwpsn	file "detector.c",line 248,column 6,is_stmt,isa 0
         SBBO      &r0.w0, r2, 4, 2      ; [ALU_PRU] |248| len
 	.dwpsn	file "detector.c",line 256,column 6,is_stmt,isa 0
@@ -1307,7 +1307,7 @@ $C$DW$57	.dwtag  DW_TAG_TI_branch
 ||$C$L34||:    
 	.dwpsn	file "detector.c",line 221,column 9,is_stmt,isa 0
         LDI       r0, 0x07d0            ; [ALU_PRU] |221| 
-        LBBO      &r1, r10, 12, 4       ; [ALU_PRU] |221| $O$K160
+        LBBO      &r1, r10, 12, 4       ; [ALU_PRU] |221| $O$K159
         QBGE      ||$C$L19||, r0, r1    ; [ALU_PRU] |221| 
 ;* --------------------------------------------------------------------------*
         JMP       ||$C$L34||            ; [ALU_PRU] |221| 

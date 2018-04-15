@@ -245,7 +245,7 @@ void main(void)
 					payload[6] = extracted & 1 ? '1' : '0';
 					payload[7] = '\n';
 					payload[8] = 0;
-					len = 9;
+					len = 8;
 					/* prints full message
 					for(bit = 1 << 15, x = 2; x < 18; x++ ){ //2 to 18 = 16 bits
 						payload[x] = (codes[i] & bit) ? '1' : '0';
